@@ -6,6 +6,8 @@ from ssl import Purpose
 from bs4 import BeautifulSoup
 from nltk.corpus import words
 
+
+#link = 'https://www.newsbtc.com/feed/'
 frequent_words = set()
 frequent_words_file = 'datafeeder/data/frequent_words.txt'
 def is_english_word(word):

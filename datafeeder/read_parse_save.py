@@ -5,12 +5,14 @@ import sys
 import feedparser
 import db_operations
 import read_content
+import read_price
 
 config_file_path = 'datafeeder/conn.config'
 section_name = 'rss links'
 #prepare database
 db = db_operations.db_operations()
 if not db.connect():
+    print('error opening database')
     exit(2)
 print('rss read and database connected')
 #read rss links from config file
@@ -30,3 +32,4 @@ for rss_link in links[0][1].split(','):
             db.insert(rss_link, title, link)
 
 read_content.read_content()                
+read_price.read_price()

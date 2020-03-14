@@ -85,4 +85,23 @@ class db_operations:
         
         cursor.close()   
         return 
-        
+
+    def last_price_update(self):
+        cursor = self._conn.cursor()
+        postgres_select_query = """ SELECT min(time_stamp) FROM public.price_logs;"""
+        cursor.execute(postgres_select_query)
+        self._conn.commit()
+        res = cursor.fetchone()
+        cursor.close
+        return res[0]
+
+    def insert_data_point(self, index_date, index_value):
+        cursor = self._conn.cursor()
+        postgres_insert_query = """ INSERT INTO public.price_logs(
+	currency_name, price, time_stamp)
+	VALUES ('BPI', %s, %s);
+            """
+        record_to_insert = (index_value, index_date)
+        cursor.execute(postgres_insert_query, record_to_insert)
+        self._conn.commit()
+        cursor.close()
