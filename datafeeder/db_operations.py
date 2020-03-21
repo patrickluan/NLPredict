@@ -85,6 +85,18 @@ class db_operations:
         
         cursor.close()   
         return 
+    def read_content(self, log_id):
+        #read content by log_id
+        cursor = self._conn.cursor()
+        postgres_select_query = str.format("""select content from public.content
+            where log_id = {}
+            limit(1);
+            """, log_id)
+        cursor.execute(postgres_select_query)
+        self._conn.commit()
+        res = cursor.fetchone()
+        cursor.close
+        return res[0]
 
     def last_price_update(self):
         cursor = self._conn.cursor()
@@ -98,10 +110,24 @@ class db_operations:
     def insert_data_point(self, index_date, index_value):
         cursor = self._conn.cursor()
         postgres_insert_query = """ INSERT INTO public.price_logs(
-	currency_name, price, time_stamp)
-	VALUES ('BPI', %s, %s);
+	        currency_name, price, time_stamp)
+	        VALUES ('BPI', %s, %s);
             """
         record_to_insert = (index_value, index_date)
         cursor.execute(postgres_insert_query, record_to_insert)
         self._conn.commit()
         cursor.close()
+
+    # read logs and return tuple of (log id, time_stamp, title)
+    def get_next_date(self):
+        cursor = self._conn.cursor()
+        postgres_select_query = """ SELECT log_id, time_stamp, title
+	            FROM public.daily_logs
+	            where extra_note = ''
+            	limit(3);
+                """
+        cursor.execute(postgres_select_query)
+        self._conn.commit()
+        result = cursor.fetchall()
+        cursor.close()
+        return (result)

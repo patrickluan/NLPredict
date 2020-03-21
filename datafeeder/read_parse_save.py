@@ -33,3 +33,4 @@ for rss_link in links[0][1].split(','):
 
 read_content.read_content()                
 read_price.read_price()
+
