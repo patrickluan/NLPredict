@@ -79,12 +79,21 @@ class db_operations:
         cursor = self._conn.cursor()
         postgres_update_query = "UPDATE public.daily_logs SET status= 'retrieved'  WHERE log_id = {};"
         postgres_update_query = postgres_update_query.format(log_id)
-        print(postgres_update_query)
         cursor.execute(postgres_update_query)
         self._conn.commit() 
-        
         cursor.close()   
         return 
+
+    def set_log_persisted(self, log_id):
+        #upate the daily log table to set the flag as persisted
+        cursor = self._conn.cursor()
+        postgres_update_query = "UPDATE public.daily_logs SET status = 'persisted'  WHERE log_id = {};"
+        postgres_update_query = postgres_update_query.format(log_id)
+        cursor.execute(postgres_update_query)
+        self._conn.commit() 
+        cursor.close()   
+        return 
+
     def read_content(self, log_id):
         #read content by log_id
         cursor = self._conn.cursor()
@@ -123,8 +132,7 @@ class db_operations:
         cursor = self._conn.cursor()
         postgres_select_query = """ SELECT log_id, time_stamp, title
 	            FROM public.daily_logs
-	            where extra_note = ''
-            	limit(3);
+	            where status = 'retrieved';
                 """
         cursor.execute(postgres_select_query)
         self._conn.commit()

@@ -36,4 +36,5 @@ for log in r:
     folder = root_folder +'\\' + log_date +'\\'
     file_name = folder + textfile
     write_to_file(file_name, log_title, log_id)
+    db.set_log_persisted(log_id)
 
