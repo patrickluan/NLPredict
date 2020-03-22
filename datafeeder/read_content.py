@@ -5,7 +5,7 @@ import ssl
 from ssl import Purpose
 from bs4 import BeautifulSoup
 from nltk.corpus import words
-
+from nltk.corpus import stopwords
 
 #link = 'https://www.newsbtc.com/feed/'
 frequent_words = set()
@@ -34,10 +34,10 @@ def dump_contents(log_id, content):
 
 # start of the operation
 def read_content():
-
+    stop_words=set(stopwords.words("english"))
     with open(frequent_words_file, 'rb') as word_file:
         frequent_words = pickle.load(word_file)
-
+        
     for link in find_all_urls():
         result = ''
         #link is a (id, url) tuple
@@ -49,7 +49,7 @@ def read_content():
         stripped_text = soup.get_text(strip = True)
         
         for seg in stripped_text.split():
-            if len(seg)>2 and is_english_word(seg):
+            if len(seg)>2 and is_english_word(seg) and (seg not in stop_words):
                 result = result + ' ' + seg
         index = link[0]
         dump_contents(index, result)

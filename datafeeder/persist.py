@@ -19,22 +19,32 @@ def write_to_file(file_name, log_title, log_id):
 
     with open(file_name, 'a+') as f:
         f.writelines(log_title)
+        db = db_operations.db_operations()
+        if not db.connect():
+            print('error opening database')
+            exit(2)
+            # get an array of logs to persist
         content =  db.read_content(log_id)
         f.write(content)
 
-db = db_operations.db_operations()
-if not db.connect():
-    print('error opening database')
-    exit(2)
-print('rss read and database connected')
-# get an array of logs to persist
-r = db.get_next_date()
-for log in r:
-    log_id = log[0]
-    log_date = str.format('{}_{}_{}', log[1].year,  log[1].month, log[1].day)
-    log_title = log[2]
-    folder = root_folder +'\\' + log_date +'\\'
-    file_name = folder + textfile
-    write_to_file(file_name, log_title, log_id)
-    db.set_log_persisted(log_id)
+def persist():
+    db = db_operations.db_operations() 
+    if not db.connect():
+        print('error opening database')
+        exit(2)
+        # get an array of logs to persist
+    r = db.get_next_date()
+    
+    for log in r:
+        log_id = log[0]
+        log_date = str.format('{}_{}_{}', log[1].year,  log[1].month, log[1].day)
+        log_title = log[2]
+        folder = root_folder +'\\' + log_date +'\\'
+        file_name = folder + textfile
+        write_to_file(file_name, log_title, log_id)
+        db.set_log_persisted(log_id)
+    print (str.format('saved to file: {}', len(r)))
 
+
+if __name__ == "__main__":
+    persist()

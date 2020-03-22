@@ -6,6 +6,7 @@ import feedparser
 import db_operations
 import read_content
 import read_price
+import persist
 
 config_file_path = 'datafeeder/conn.config'
 section_name = 'rss links'
@@ -30,7 +31,10 @@ for rss_link in links[0][1].split(','):
         link = post.link
         if(not db.found_duplicate(link, title)):
             db.insert(rss_link, title, link)
+            print(title)
 
 read_content.read_content()                
 read_price.read_price()
+persist.persist()
+print('done!')
 

@@ -37,7 +37,7 @@ class db_operations:
         cursor = self._conn.cursor()
         postgres_select_query = """ SELECT count(*)
             FROM public.daily_logs
-            where rss_source = %s
+            where url = %s
             and title = %s;"""
         record_to_search = (rss_url, title)
         cursor.execute(postgres_select_query, record_to_search)
@@ -46,12 +46,12 @@ class db_operations:
         return res[0] > 0
         
     
-    def insert(self, rss_url, title, link ):
+    def insert(self, rss, title, link ):
         cursor = self._conn.cursor()
         postgres_insert_query = """ INSERT INTO public.daily_logs
         (rss_source, time_stamp, title, url, status, extra_note)
         VALUES (%s, %s, %s, %s, %s, %s);"""
-        record_to_insert = (rss_url, time.asctime(), title, link, 'new', '')
+        record_to_insert = (rss, time.asctime(), title, link, 'new', '')
         cursor.execute(postgres_insert_query, record_to_insert)
         self._conn.commit()
         cursor.close()   
@@ -64,8 +64,9 @@ class db_operations:
             where status = 'new';"""
         cursor.execute(postgres_select_query)
         res = cursor.fetchall()
-        cursor.close();
+        cursor.close()
         return res
+
     def insert_content(self, log_id, content):
             #insert the real data from url.
         cursor = self._conn.cursor()
@@ -139,3 +140,10 @@ class db_operations:
         result = cursor.fetchall()
         cursor.close()
         return (result)
+if __name__ == "__main__":
+    url = 'https://www.newsbtc.com/feed/'
+    title =  'Is The Crypto Market Bottom In? This News Headline Suggests It’s Near'
+    db = db_operations()
+    db.connect()
+    res = db.found_duplicate(url, title)
+    print (res)
