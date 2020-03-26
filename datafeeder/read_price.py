@@ -13,7 +13,8 @@ def get_last_update():
 	if not db.connect():
 		return 'not connected'
 	update_time = db.last_price_update()
-	return date(update_time.year, update_time.month, update_time.day)
+	#last update date +1 is the start date for query. otherwise it will read twice
+	return date(update_time.year, update_time.month, update_time.day+1)
 
 
 def insert_data_point(index_date, index_value):
@@ -33,10 +34,13 @@ def read_price():
 	try:
 		response = session.get(url)
 		data = json.loads(response.text)
-		if (len (data['bpi']) >0 ):
+		if data.get('bpi')!= None and len(data['bpi']) >0 :
 			for item in data['bpi']:
 				index_date = item
 				index =  data['bpi'][index_date]
 				insert_data_point(index_date, index)
 	except (ConnectionError, Timeout, TooManyRedirects) as e:
 		print(e)
+		
+if __name__ == "__main__":
+	read_price()

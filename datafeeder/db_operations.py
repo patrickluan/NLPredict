@@ -110,7 +110,7 @@ class db_operations:
 
     def last_price_update(self):
         cursor = self._conn.cursor()
-        postgres_select_query = """ SELECT min(time_stamp) FROM public.price_logs;"""
+        postgres_select_query = """ SELECT max(time_stamp) FROM public.price_logs;"""
         cursor.execute(postgres_select_query)
         self._conn.commit()
         res = cursor.fetchone()
