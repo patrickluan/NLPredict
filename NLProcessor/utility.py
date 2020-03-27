@@ -24,7 +24,7 @@ def get_target_values(file_names):
         ele = file_name.split('\\')
         ymd = ele[2].split('_')
         dates.append(date(int(ymd[0]), int(ymd[1]), int(ymd[2])))
-    return dates
+    return get_target(dates)
 
 def get_target(dates):
     target_values = []
@@ -33,11 +33,13 @@ def get_target(dates):
         print('error opening database')
         pass
     for rss_date in dates:
-        price_today = db.get_price(rss_date)[0]
-        price_tomorrow = db.get_price(rss_date + timedelta(days=1))[0]
-        price_diff =  price_tomorrow - price_today
-        target_values.append((0,1)[price_today<price_tomorrow])
+        price_today = db.get_price(rss_date)
+        price_tomorrow = db.get_price(rss_date + timedelta(days=1))
+        if(price_today != -1 and price_tomorrow != -1):
+            price_diff =  price_tomorrow - price_today
+            # 1: increase 0: decrease
+            target_values.append((1,0)[price_today < price_tomorrow])
     return target_values
 
 if __name__ == "__main__":
-    get_target(get_target_values(get_file_list()))
+    get_target_values(get_file_list())

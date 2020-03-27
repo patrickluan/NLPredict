@@ -37,7 +37,7 @@ def persist():
     
     for log in r:
         log_id = log[0]
-        log_date = str.format('{}_{}_{}', log[1].year,  log[1].month, log[1].day)
+        log_date = str.format('{}_{:02d}_{:02d}', log[1].year,  log[1].month, log[1].day)
         log_title = log[2]
         folder = root_folder +'\\' + log_date +'\\'
         file_name = folder + textfile

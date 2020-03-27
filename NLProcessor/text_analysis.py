@@ -46,15 +46,12 @@ def convert_file_to_array(cv, file_names, training):
 
 
 if __name__ == "__main__":
-    print(utility.get_file_list())
-    '''
+    
     #trying to use the same cv to preserve the dictionary
     cv = CountVectorizer( analyzer = 'word', lowercase=True, ngram_range = (1,1))
-    #y = array([10, -96, -13, -6, 7, 4, -1])
-    # increase = 1, decrease = 0
-    y = array([1, 0, 0, 0, 1, 1, 0]) 
-    file_names = ['2020_3_5', '2020_3_7', '2020_3_8', '2020_3_9', '2020_3_10','2020_3_19', '2020_3_20']
+    file_names = utility.get_file_list()
     x = convert_file_to_array(cv,file_names, True)
+    y = utility.get_target_values(file_names)
     clf = MultinomialNB(alpha=0.5 ).fit(x,y)
     test_file_names  = ['2020_3_21']
     #y_test = array([-6])

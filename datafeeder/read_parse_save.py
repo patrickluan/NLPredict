@@ -34,7 +34,7 @@ for rss_link in links[0][1].split(','):
             print(title)
 
 read_content.read_content()                
-read_price.read_price()
 persist.persist()
+read_price.read_persist_price()
 print('done!')
 

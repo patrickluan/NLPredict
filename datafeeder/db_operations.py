@@ -1,9 +1,7 @@
 import psycopg2
 from configparser import ConfigParser
-#from psycopg2 import connect
 import time
-#from builtins import set
-
+import sys
 #constants
 config_file_path = 'datafeeder/conn.config'
 section_name = 'postgresql_conn_data'
@@ -149,7 +147,10 @@ class db_operations:
         self._conn.commit()
         result = cursor.fetchone()
         cursor.close()
-        return (result)
+        if(result != None):
+            return result[0]
+        else:
+            return -1
 
 
 

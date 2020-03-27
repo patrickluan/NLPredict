@@ -25,9 +25,11 @@ def insert_data_point(index_date, index_value):
 
 
 
-def read_price():
+def read_persist_price():
 	start_date =  get_last_update()
 	end_date = date.today()
+	if(start_date >=  end_date):
+		return
 	url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start={0}&end={1}'
 	url= str.format(url, start_date, end_date)
 	session = Session()
@@ -43,4 +45,4 @@ def read_price():
 		print(e)
 		
 if __name__ == "__main__":
-	read_price()
+	read_persist_price()
