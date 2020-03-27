@@ -37,3 +37,7 @@ persist.persist()
 read_price.read_persist_price()
 print('done!')
 
+'''
+COMMAND LINE:
+C:/Users/yongwei/AppData/Local/Programs/Python/Python38/python.exe  c:/Python/NLPredict/datafeeder/read_parse_save.py
+'''
