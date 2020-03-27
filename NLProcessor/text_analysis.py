@@ -11,10 +11,9 @@ import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
 
+import utility
+
 #hard coded file name for now
-
-
-
 def process_file(file_name):
     filtered =[]
     stop_words=set(stopwords.words("english"))
@@ -36,10 +35,8 @@ def process_file(file_name):
 
 def convert_file_to_array(cv, file_names, training):
     x =[]
-    template = 'datafeeder\\data\\{}\\feed.txt'
     for file_name in file_names:
-        full_name = str.format(template, file_name)
-        x.append (process_file(full_name))
+        x.append (process_file(file_name))
     
     if training:
         text_counts= cv.fit_transform(x)
@@ -47,7 +44,10 @@ def convert_file_to_array(cv, file_names, training):
         text_counts= cv.transform(x)
     return text_counts
 
+
 if __name__ == "__main__":
+    print(utility.get_file_list())
+    '''
     #trying to use the same cv to preserve the dictionary
     cv = CountVectorizer( analyzer = 'word', lowercase=True, ngram_range = (1,1))
     #y = array([10, -96, -13, -6, 7, 4, -1])
@@ -62,6 +62,9 @@ if __name__ == "__main__":
     x_test = convert_file_to_array(cv, test_file_names, False)
     predicted= clf.predict(x_test)
     print("MultinomialNB Accuracy:{} predict: ", metrics.accuracy_score(y_test, predicted), predicted)
+'''
+
+
 
 '''
 print( nltk.pos_tag(stemmed))

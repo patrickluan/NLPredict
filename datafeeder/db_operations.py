@@ -140,6 +140,19 @@ class db_operations:
         result = cursor.fetchall()
         cursor.close()
         return (result)
+
+    def get_price(self, price_date):
+        cursor = self._conn.cursor()
+        query = 'SELECT  price FROM public.price_logs where time_stamp =\'{}-{}-{}\'; '
+        postgres_select_query = str.format(query, price_date.year, price_date.month, price_date.day )
+        cursor.execute(postgres_select_query)
+        self._conn.commit()
+        result = cursor.fetchone()
+        cursor.close()
+        return (result)
+
+
+
 if __name__ == "__main__":
     url = 'https://www.newsbtc.com/feed/'
     title =  'Is The Crypto Market Bottom In? This News Headline Suggests It’s Near'
