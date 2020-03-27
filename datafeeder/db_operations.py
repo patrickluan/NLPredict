@@ -3,7 +3,7 @@ from configparser import ConfigParser
 import time
 import sys
 #constants
-config_file_path = 'datafeeder/conn.config'
+CONFIG_FILE_PATH = 'c:\\python\\NLPredict\\datafeeder\\conn.config'
 section_name = 'postgresql_conn_data'
 
 class db_operations:
@@ -18,17 +18,16 @@ class db_operations:
         self._conn.close()
  
     def get_connection_by_config(self):
-        if(len(config_file_path) > 0 and len(section_name) > 0):
-            config_parser = ConfigParser()
-            config_parser.read(config_file_path)
-            if(config_parser.has_section(section_name)):
-                config_params = config_parser.items(section_name)
-                db_conn_dict = {}
-                for config_param in config_params:
-                    key = config_param[0]
-                    value = config_param[1]
-                    db_conn_dict[key] = value
-                conn = psycopg2.connect(**db_conn_dict)
+        config_parser = ConfigParser()
+        config_parser.read(CONFIG_FILE_PATH)
+        if(config_parser.has_section(section_name)):
+            config_params = config_parser.items(section_name)
+            db_conn_dict = {}
+            for config_param in config_params:
+                key = config_param[0]
+                value = config_param[1]
+                db_conn_dict[key] = value
+            conn = psycopg2.connect(**db_conn_dict)
         self._conn = conn
         
     def found_duplicate(self, rss_url, title):

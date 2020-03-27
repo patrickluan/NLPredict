@@ -12,8 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
 
 import utility
-
-#hard coded file name for now
+prediction =['Decrease', 'Increase']
 def process_file(file_name):
     filtered =[]
     stop_words=set(stopwords.words("english"))
@@ -52,26 +51,12 @@ if __name__ == "__main__":
     file_names = utility.get_file_list()
     x = convert_file_to_array(cv,file_names, True)
     y = utility.get_target_values(file_names)
-    clf = MultinomialNB(alpha=0.5 ).fit(x,y)
-    test_file_names  = ['2020_3_21']
-    #y_test = array([-6])
-    y_test = array([0])
+    clf = MultinomialNB(alpha=1.0 ).fit(x,y)
+    test_file_names  = ['datafeeder\\data\\2020_03_26\\feed.txt',
+        'datafeeder\\data\\2020_03_27\\feed.txt']
+    #predict tomorrow will increase
+    y_test = array([utility.DECREASE,utility.DECREASE]) 
     x_test = convert_file_to_array(cv, test_file_names, False)
     predicted= clf.predict(x_test)
-    print("MultinomialNB Accuracy:{} predict: ", metrics.accuracy_score(y_test, predicted), predicted)
-'''
-
-
-
-'''
-print( nltk.pos_tag(stemmed))
-
-fdist = FreqDist(stemmed)
-fdist.plot(30,cumulative=False)
-plt.show()
-
-
-cv = CountVectorizer(lowercase=True, ngram_range = (1,1))
-text_counts= cv.fit_transform(stemmed)
-print(text_counts)
-'''
+    print("MultinomialNB Accuracy: ", metrics.accuracy_score(y_test, predicted))
+    print("Predictions: ", predicted )

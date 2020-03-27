@@ -9,7 +9,7 @@ from nltk.corpus import stopwords
 
 #link = 'https://www.newsbtc.com/feed/'
 frequent_words = set()
-frequent_words_file = 'datafeeder/data/frequent_words.txt'
+FREQUENT_WORDS_FILE = 'c:\\python\\NLPredict\\datafeeder\\data\\frequent_words.txt'
 def is_english_word(word):
     lower_case_word = word.lower()
     if lower_case_word in frequent_words:
@@ -35,7 +35,7 @@ def dump_contents(log_id, content):
 # start of the operation
 def read_content():
     stop_words=set(stopwords.words("english"))
-    with open(frequent_words_file, 'rb') as word_file:
+    with open(FREQUENT_WORDS_FILE, 'rb') as word_file:
         frequent_words = pickle.load(word_file)
         
     for link in find_all_urls():
@@ -53,8 +53,6 @@ def read_content():
                 result = result + ' ' + seg
         index = link[0]
         dump_contents(index, result)
-        
-
-    with open(frequent_words_file, 'wb') as word_file:
+    with open(FREQUENT_WORDS_FILE, 'wb') as word_file:
         pickle.dump(frequent_words, word_file)
 

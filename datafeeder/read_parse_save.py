@@ -8,7 +8,6 @@ import read_content
 import read_price
 import persist
 
-config_file_path = 'datafeeder/conn.config'
 section_name = 'rss links'
 #prepare database
 db = db_operations.db_operations()
@@ -18,7 +17,7 @@ if not db.connect():
 print('rss read and database connected')
 #read rss links from config file
 config_parser = ConfigParser()
-config_parser.read(config_file_path)
+config_parser.read(db_operations.CONFIG_FILE_PATH)
 if(config_parser.has_section(section_name)):
     links = config_parser.items(section_name)
 

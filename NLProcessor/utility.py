@@ -6,6 +6,8 @@ from datetime import date, timedelta
 sys.path.insert(0, 'c:\\python\\NLPredict')
 from datafeeder import db_operations
 
+DECREASE = 0
+INCREASE = 1
 def get_file_list():
     #loop in the director for file names:
     dir= 'datafeeder\\data'
@@ -14,6 +16,10 @@ def get_file_list():
         for name in files:
             if(name =='feed.txt'):
                 r.append(os.path.join(root, name))
+    #the latest file might not have a price indicator yet
+    r.sort()
+    r.pop(-1)
+    r.pop(-1)
     return r
 
 def get_target_values(file_names):
@@ -35,10 +41,9 @@ def get_target(dates):
     for rss_date in dates:
         price_today = db.get_price(rss_date)
         price_tomorrow = db.get_price(rss_date + timedelta(days=1))
-        if(price_today != -1 and price_tomorrow != -1):
-            price_diff =  price_tomorrow - price_today
+        if(price_tomorrow != -1 and price_today != -1):
             # 1: increase 0: decrease
-            target_values.append((1,0)[price_today < price_tomorrow])
+            target_values.append((INCREASE,DECREASE)[price_today > price_tomorrow])
     return target_values
 
 if __name__ == "__main__":
