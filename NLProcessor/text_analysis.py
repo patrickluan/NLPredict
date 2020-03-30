@@ -1,18 +1,20 @@
 from numpy import array
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn import metrics
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
-from sklearn.naive_bayes import MultinomialNB
 from nltk.stem import PorterStemmer
 from nltk.corpus import words
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn import metrics
 
 import utility
-prediction =['Decrease', 'Increase']
+prediction_display =['Decrease', 'Increase']
 def process_file(file_name):
     filtered =[]
     stop_words=set(stopwords.words("english"))
@@ -32,31 +34,51 @@ def process_file(file_name):
     # a long string with stemmed words
     return result_str.join(stemmed) 
 
-def convert_file_to_array(cv, file_names, training):
+def convert_file_to_array(tf, file_names, training):
     x =[]
     for file_name in file_names:
-        x.append (process_file(file_name))
-    
+        bag_of_word = process_file(file_name)
+        x.append (bag_of_word)
     if training:
-        text_counts= cv.fit_transform(x)
+        text_counts= tf.fit_transform(x)
     else:
-        text_counts= cv.transform(x)
+        text_counts= tf.transform(x)
     return text_counts
 
-
-if __name__ == "__main__":
     
+if __name__ == "__main__":
     #trying to use the same cv to preserve the dictionary
     cv = CountVectorizer( analyzer = 'word', lowercase=True, ngram_range = (1,1))
+    tf =  TfidfVectorizer(input = 'content')
+    #tf: 55% cv:44% @3/29/2020
+
     file_names = utility.get_file_list()
-    x = convert_file_to_array(cv,file_names, True)
+    # using different way to vectorize
+    x = convert_file_to_array(tf,file_names, True)
+    # x = convert_file_to_array(tf,file_names, True)
     y = utility.get_target_values(file_names)
+    #use the build-in split function to validate the prediction:
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=5)
+    clf = MultinomialNB().fit(X_train, y_train)
+    predicted= clf.predict(X_test)
+    print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0))
+    print(y_test)
+    print('predicted: ')
+    print(predicted)
+
+
+    #pick 3 data point and predict:
+    '''
     clf = MultinomialNB(alpha=1.0 ).fit(x,y)
-    test_file_names  = ['datafeeder\\data\\2020_03_26\\feed.txt',
-        'datafeeder\\data\\2020_03_27\\feed.txt']
+    test_file_names  = ['datafeeder\\data\\2020_03_05\\feed.txt',
+        'datafeeder\\data\\2020_03_27\\feed.txt',
+        'datafeeder\\data\\2020_03_28\\feed.txt',
+        ]
     #predict tomorrow will increase
-    y_test = array([utility.DECREASE,utility.DECREASE]) 
+    y_test = array([utility.INCREASE,utility.DECREASE, utility.INCREASE]) 
     x_test = convert_file_to_array(cv, test_file_names, False)
     predicted= clf.predict(x_test)
-    print("MultinomialNB Accuracy: ", metrics.accuracy_score(y_test, predicted))
-    print("Predictions: ", predicted )
+    print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0 ))
+    for prediction in predicted:
+        print("Predictions: ", prediction_display[ prediction] )
+    '''

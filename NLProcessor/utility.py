@@ -20,6 +20,7 @@ def get_file_list():
     r.sort()
     r.pop(-1)
     r.pop(-1)
+    print(str.format( 'the last file to be trained: {}', r[-1]))
     return r
 
 def get_target_values(file_names):
@@ -42,9 +43,19 @@ def get_target(dates):
         price_today = db.get_price(rss_date)
         price_tomorrow = db.get_price(rss_date + timedelta(days=1))
         if(price_tomorrow != -1 and price_today != -1):
-            # 1: increase 0: decrease
-            target_values.append((INCREASE,DECREASE)[price_today > price_tomorrow])
+            pindex = eval_change(price_today, price_tomorrow)
+            print(pindex)
+            target_values.append(pindex)
     return target_values
+# 1: increase by 10%, 0: uncertain, -1: decrease by 10%
+def eval_change(today, tomorrow):
+    pct = (tomorrow- today)/today
+    threshold = 0.05
+    if(pct > threshold):
+        return 1
+    if(pct <-1 * threshold):
+        return -1
+    return 0
 
 if __name__ == "__main__":
     get_target_values(get_file_list())
