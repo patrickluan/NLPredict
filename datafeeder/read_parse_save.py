@@ -30,7 +30,7 @@ for rss_link in links[0][1].split(','):
         link = post.link
         if(not db.found_duplicate(link, title)):
             db.insert(rss_link, title, link)
-            print(title)
+            print(str.format('{}: {}', rss_link, title))
 
 read_content.read_content()                
 persist.persist()

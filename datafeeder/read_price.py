@@ -1,6 +1,6 @@
 import json
 import time
-from datetime import date
+from datetime import date, timedelta
 import json
 import db_operations
 from requests import Request, Session
@@ -13,9 +13,9 @@ def get_last_update():
 	if not db.connect():
 		return 'not connected'
 	update_time = db.last_price_update()
-	#last update date +1 is the start date for query. otherwise it will read twice
-	return date(update_time.year, update_time.month, update_time.day+1)
-
+	update_date = update_time + timedelta(days =1)
+	return date(year = update_date.year, month= update_date.month, day = update_date.day)
+	# last update date +1 is the start date for query. otherwise it will read twice
 
 def insert_data_point(index_date, index_value):
 	db = db_operations.db_operations()

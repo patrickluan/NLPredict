@@ -6,7 +6,8 @@ from datetime import date, timedelta
 sys.path.insert(0, 'c:\\python\\NLPredict')
 from datafeeder import db_operations
 
-DECREASE = 0
+DECREASE = -1
+NUTURAL = 0
 INCREASE = 1
 def get_file_list():
     #loop in the director for file names:
@@ -38,14 +39,14 @@ def get_target(dates):
     db =  db_operations.db_operations() 
     if not db.connect():
         print('error opening database')
-        pass
+        return tar
     for rss_date in dates:
         price_today = db.get_price(rss_date)
         price_tomorrow = db.get_price(rss_date + timedelta(days=1))
         if(price_tomorrow != -1 and price_today != -1):
             pindex = eval_change(price_today, price_tomorrow)
-            print(pindex)
             target_values.append(pindex)
+    print(target_values)
     return target_values
 # 1: increase by 10%, 0: uncertain, -1: decrease by 10%
 def eval_change(today, tomorrow):

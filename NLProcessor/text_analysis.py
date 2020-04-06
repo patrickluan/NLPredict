@@ -14,7 +14,7 @@ from nltk.tag import pos_tag
 import matplotlib.pyplot as plt
 
 import utility
-prediction_display =['Decrease', 'Increase']
+
 def process_file(file_name):
     filtered =[]
     stop_words=set(stopwords.words("english"))
@@ -51,34 +51,36 @@ if __name__ == "__main__":
     cv = CountVectorizer( analyzer = 'word', lowercase=True, ngram_range = (1,1))
     tf =  TfidfVectorizer(input = 'content')
     #tf: 55% cv:44% @3/29/2020
-
+    vectorizer = cv
     file_names = utility.get_file_list()
     # using different way to vectorize
-    x = convert_file_to_array(tf,file_names, True)
+    x = convert_file_to_array(vectorizer,file_names, True)
     # x = convert_file_to_array(tf,file_names, True)
     y = utility.get_target_values(file_names)
-    #use the build-in split function to validate the prediction:
-    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=5)
-    clf = MultinomialNB().fit(X_train, y_train)
-    predicted= clf.predict(X_test)
-    print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0))
-    print(y_test)
-    print('predicted: ')
-    print(predicted)
 
+    '''
+    #use the build-in split function to validate the prediction:
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
+    clf = MultinomialNB(alpha =0.8).fit(X_train, y_train)
+    predicted= clf.predict(X_test)
+   
+    '''
 
     #pick 3 data point and predict:
-    '''
+    
     clf = MultinomialNB(alpha=1.0 ).fit(x,y)
     test_file_names  = ['datafeeder\\data\\2020_03_05\\feed.txt',
         'datafeeder\\data\\2020_03_27\\feed.txt',
         'datafeeder\\data\\2020_03_28\\feed.txt',
         ]
     #predict tomorrow will increase
-    y_test = array([utility.INCREASE,utility.DECREASE, utility.INCREASE]) 
-    x_test = convert_file_to_array(cv, test_file_names, False)
+    y_test = array([0, -1, -1]) 
+    x_test = convert_file_to_array(vectorizer, test_file_names, False)
     predicted= clf.predict(x_test)
-    print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0 ))
-    for prediction in predicted:
-        print("Predictions: ", prediction_display[ prediction] )
-    '''
+    
+    
+    print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0))
+    print(y_test)
+    print('predicted: ')
+    print(predicted)
+    
