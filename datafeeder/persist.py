@@ -17,8 +17,10 @@ def write_to_file(file_name, log_title, log_id):
                 if exc.errno != errno.EEXIST:
                     raise
 
-    with open(file_name, 'a+') as f:
-        f.writelines(log_title)
+        #file openned in this manner suppresses encoding errors
+    with open(file_name, 'a+', encoding='utf-8', errors='surrogateescape') as f:
+        title = log_title.format(encoding="utf-8")
+        f.writelines(title)
         db = db_operations.db_operations()
         if not db.connect():
             print('error opening database')

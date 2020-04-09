@@ -58,16 +58,14 @@ if __name__ == "__main__":
     # x = convert_file_to_array(tf,file_names, True)
     y = utility.get_target_values(file_names)
 
-    '''
     #use the build-in split function to validate the prediction:
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
-    clf = MultinomialNB(alpha =0.8).fit(X_train, y_train)
+    clf = MultinomialNB(alpha =1.0).fit(X_train, y_train)
     predicted= clf.predict(X_test)
-   
-    '''
+
 
     #pick 3 data point and predict:
-    
+    '''
     clf = MultinomialNB(alpha=1.0 ).fit(x,y)
     test_file_names  = ['datafeeder\\data\\2020_03_05\\feed.txt',
         'datafeeder\\data\\2020_03_27\\feed.txt',
@@ -77,7 +75,8 @@ if __name__ == "__main__":
     y_test = array([0, -1, -1]) 
     x_test = convert_file_to_array(vectorizer, test_file_names, False)
     predicted= clf.predict(x_test)
-    
+    '''
+
     
     print("MultinomialNB Accuracy: {:2.2f}%".format( metrics.accuracy_score(y_test, predicted)*100.0))
     print(y_test)
