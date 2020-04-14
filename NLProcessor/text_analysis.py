@@ -19,7 +19,7 @@ def process_file(file_name):
     filtered =[]
     stop_words=set(stopwords.words("english"))
     stemmed =[] 
-    with open(file_name) as f:
+    with open(file_name, encoding='utf-8', errors='surrogateescape') as f:
         text = f.read()
     tokenized_word=word_tokenize(text)
     #filter the stop words 
