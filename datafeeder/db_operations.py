@@ -45,7 +45,8 @@ class db_operations:
     
     def insert(self, rss, title, link ):
         cursor = self._conn.cursor()
-        postgres_insert_query = """ INSERT INTO public.daily_logs
+        
+        postgres_insert_query ="""INSERT INTO public.daily_logs
         (rss_source, time_stamp, title, url, status, extra_note)
         VALUES (%s, %s, %s, %s, %s, %s);"""
         record_to_insert = (rss, time.asctime(), title, link, 'new', '')
