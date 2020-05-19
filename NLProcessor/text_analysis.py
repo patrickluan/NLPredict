@@ -50,7 +50,7 @@ if __name__ == "__main__":
     #trying to use the same cv to preserve the dictionary
     cv = CountVectorizer( analyzer = 'word', lowercase=True, ngram_range = (1,1))
     tf =  TfidfVectorizer(input = 'content')
-    #tf: 55% cv:44% @3/29/2020
+    
     vectorizer = cv
     file_names = utility.get_file_list()
     # using different way to vectorize
